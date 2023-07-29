@@ -2,7 +2,7 @@
 This repository is a code adapted to account for general control implementations and how these would affect the rise and fall of infections using deep reinforcement learning (DRL). The code is adapted from a DRL stock prediction tutorial, and data is provided by the state of California. 
 
 ## Code & Data Sources
-The code is adapted from https://www.analyticsvidhya.com/blog/2020/10/reinforcement-learning-stock-price-prediction/, with data extracted from https://data.chhs.ca.gov/dataset/covid-19-time-series-metrics-by-county-and-state/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a?view_id=eb8a870d-78a9-4a3a-bb9e-aef74924085c.
+The code is adapted from https://www.analyticsvidhya.com/blog/2020/10/reinforcement-learning-stock-price-prediction/, with data gathered from https://data.chhs.ca.gov/dataset/covid-19-time-series-metrics-by-county-and-state/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a?view_id=eb8a870d-78a9-4a3a-bb9e-aef74924085c.
 
 The CSV files provide data as follows:
 - covid19cases_test - All cases and deaths recorded daily from February 2020 until most current, across all counties in California (read more on the data's website for changes in data recording).
