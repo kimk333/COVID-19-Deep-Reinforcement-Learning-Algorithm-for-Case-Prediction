@@ -48,4 +48,6 @@ The policy is followed by a deep reinforcement learning algorithm known as Deep 
 - main.py - The main training code and loop; depending on the action that is predicted by the model, cases are increased or decreased and the algorithm trains via multiple episodes which are the same as epochs in deep learning. The model is then saved subsequently. The file_name is the name of your CSV file, the window_size is the amount of data/steps for the agent to gain its experience from, and the episodes are the amount of episodes to train the agent. A good model should be trained for at least 1000-3000 episodes or until there is no longer any improvement.
 - eval.py - Once the model has been trained depending on new data, you will be able to test the model for the current policy saved; you can accordingly evaluate the credibility of the model.
 
+The Colab can also be found here (may not be fully updated): https://colab.research.google.com/drive/1cwLCqRVvdGpX41jlN7RjwVWJYMYND1xk?usp=sharing.
+
 
