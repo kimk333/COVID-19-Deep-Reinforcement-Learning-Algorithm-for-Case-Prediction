@@ -5,9 +5,9 @@ This repository is a code adapted to account for general control implementations
 The code is adapted from https://www.analyticsvidhya.com/blog/2020/10/reinforcement-learning-stock-price-prediction/, with data extracted from https://data.chhs.ca.gov/dataset/covid-19-time-series-metrics-by-county-and-state/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a?view_id=eb8a870d-78a9-4a3a-bb9e-aef74924085c.
 
 The CSV files provide data as follows:
-covid19cases_test - All cases and deaths recorded daily from February 2020 until most current, across all counties in California (read more on the data's website for changes in data recording).
-covidla - All cumulative cases and deaths for only the county of Los Angeles.
-covidla_ - A subset of all cumulative cases and deaths for the county of Los Angeles.
+- covid19cases_test - All cases and deaths recorded daily from February 2020 until most current, across all counties in California (read more on the data's website for changes in data recording).
+- covidla - All cumulative cases and deaths for only the county of Los Angeles.
+- covidla_ - A subset of all cumulative cases and deaths for the county of Los Angeles.
 
 
 ## Reinforcement Learning
