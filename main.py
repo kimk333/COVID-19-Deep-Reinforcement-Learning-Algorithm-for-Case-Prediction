@@ -105,23 +105,22 @@ def trainAndPredictCases(file_name, window_size, episode_count):
         plt.title('Frequency of Each Action over Time Step n')
         plt.savefig('frequencies.png')
 
-       # Plot the amount of cases reduced over episodes as a line plot
+        # Plot the amount of cases reduced over episodes as a line plot
         plt.figure(figsize=(8, 6))
         plt.plot(cumulative_reduction)
-        plt.xlabel('Episode (n)')
+        plt.xlabel('Episodes')
         plt.ylabel('Cumulative Cases Reduced')
         plt.title('Amount of Cases Reduced over Episodes')
         plt.savefig('recovered.png')
-        plt.show()
         
         # Plot the total cases at the end of each episode as a line plot
         plt.figure(figsize=(8, 6))
         plt.plot(total_cases_end_of_episode)
-        plt.xlabel('Episode (n)')
+        plt.xlabel('Episodes')
         plt.ylabel('Total Cases')
         plt.title('Total Cases over Episodes')
         plt.savefig('total.png')
-        plt.show()
+
 
     
 # Main code execution
