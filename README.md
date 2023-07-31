@@ -18,7 +18,7 @@ Reinforcement learning is a branch of machine learning in which an algorithm, or
 Additionally, unlike supervised or unsupervised learning, reinforcement learning does not rely on labeled data and is able to efficiently learn with less historical data. As seen with Google DeepMind's AlphaGo, reinforcement learning agents are even able to surpass many humans and traditional algorithms by learning through trial-and error. 
 
 The general guidelines for the framework of a reinforcement learning algorithm are as follows: 
-1. Import all neccessary libraries and packages
+1. Import all necessary libraries and packages
 2. Create the agent who makes all the decisions (single-agent RL)
 3. Define basic functions for formatting the values, sigmoid function, reading the data file, etc...
 4. Train the agent
