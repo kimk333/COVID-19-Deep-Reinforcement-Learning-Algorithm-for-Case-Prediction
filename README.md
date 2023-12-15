@@ -49,6 +49,4 @@ The policy is followed by some deep reinforcement learning algorithms, specifica
     - The file_name is the name of your CSV file, the window_size is the amount of data/steps for the agent to gain its experience from, and the episode_count is the number of episodes to train the agent. An episode terminates once the terminal state is reached. A good model should be trained for at least 1000-3000 episodes or until there is no longer any improvement. Here, I used window_size=7 to reflect a week.
 - eval.py - Once the model has been trained depending on new data, you will be able to test the model for the current policy saved; you can accordingly evaluate the credibility of the model. This code will have to be debugged according to the algorithm used.
 
-The Colab can also be found here (may not be fully updated): https://colab.research.google.com/drive/1cwLCqRVvdGpX41jlN7RjwVWJYMYND1xk?usp=sharing.
-
 
