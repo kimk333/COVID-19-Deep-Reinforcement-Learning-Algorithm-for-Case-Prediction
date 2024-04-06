@@ -15,117 +15,60 @@ import sys
 import matplotlib.pyplot as plt
 from collections import deque
 
+import sys
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Define the main function for DQN training and prediction
-def trainAndPredictCases(file_name, window_size, episode_count):
-    file_name = str(file_name)
-    window_size = int(window_size) # the number of past time steps to predict next step
-    episode_count = int(episode_count)
-    agent = DQNAgent(window_size)  # Assuming 3 actions: 0 (no control), 1 (complete lockdown), 2 (complete lockdown and 100% effective + immediate cure)
-    data = getCaseDataVec(file_name)
-    recovery_period = 14 # days
-    l = len(data) - 1
-    batch_size = 16 #32 standard
-    # Initialize dictionaries to store counts of each action at each time step
-    action_counts = {
-        "Sit": 0,
-        "Lockdown/Quarantine": 0,
-        "Lockdown + Cure": 0
-    }
-    # Initialize a list to store cumulative reduction in cases over episodes
-    cumulative_reduction = []
-    total_cases_end_of_episode = []
-    for e in range(episode_count + 1):
-        print("Episode " + str(e) + "/" + str(episode_count))
-        state = getState(data, 0, window_size + 1)
-        total_cases = 0
-        total_reward = 0
-        cases_reduced = 0 
-        agent.inventory = []
-        for t in range(l):
-            action = agent.act(state)
-            next_state = getState(data, t + 1, window_size + 1)
-            reward = 0
-            if action == 0: # sit
-                agent.inventory.append(data[t])
-                total_cases = data[t]
-                action_counts["Sit"] += 1
-                reward = -5
-                print("No control: " + formatCases(data[t]))
-            elif action == 1 and len(agent.inventory) > 0: # lockdown/quarantine
-                oldest_cases = agent.inventory.pop(0)
-                recovered = 0
-                if t >= recovery_period:
-                    recovered = oldest_cases
-                    action_counts["Lockdown/Quarantine"] += 1
-                reward = max(recovered, 0)
-                total_reward += reward
-                total_cases = data[t] - recovered # at time t
-                cases_reduced += recovered
-                print("Decrease due to lockdown: " + formatCases(total_cases) + " | Cases Reduced: " + formatCases(recovered))
-            elif action == 2 and len(agent.inventory) > 0 and data[t]>100:  # 100% effective cure given to 10% of infected + lockdown
-                recovered_cured = 0
-                cured  = 0
-                action_counts["Lockdown + Cure"] += 1
-                if t >= recovery_period:
-                    recovered_cured = oldest_cases + 0.1 * data[t]
-                    reward = max(recovered_cured, 0)
-                    total_reward += reward
-                    cases = data[t] - recovered_cured # at time t
-                    total_cases = max(cases, 0)
-                    cases_reduced += recovered_cured
-                    print("Decrease due to lockdown and cure: " + formatCases(total_cases) + " | Cases Reduced: " + formatCases(recovered_cured))
-                else:
-                    cured = 0.1 * data[t]
-                    reward = max(cured, 0)
-                    total_reward += reward
-                    total_cases = data[t] - cured
-                    cases_reduced += cured
-                    print("Decrease due to cure: " + formatCases(total_cases) + " | Cases Reduced: " + formatCases(cured))
-            # Store the total cases reduced in the current episode in the cumulative_reduction list
-            cumulative_reduction.append(cases_reduced)
-            total_cases_end_of_episode.append(total_cases)
-            done = True if t == l - 1 or total_cases == 0 else False
-            agent.memory.append((state, action, reward, next_state, done))
-            state = next_state
-            if done:
-                print("--------------------------------")
-                print("Total Cases: " + formatCases(total_cases))
-                print("--------------------------------")
-            if len(agent.memory) > batch_size:
-                agent.expReplay(batch_size)
-        if e % 10 == 0:
-            agent.model.save(str(e))
-            
-        # Plot the frequency of each action over time step 'n'
-        actions = list(action_counts.keys())
-        frequencies = list(action_counts.values())
-        plt.figure(figsize=(6, 8))
-        plt.bar(actions, frequencies)
-        plt.xlabel('Actions')
-        plt.ylabel('Frequency')
-        plt.title('Frequency of Each Action over Time Step n')
-        plt.savefig('frequencies.png')
+stock_name = input("Enter stock_name: ") # input .csv file name
+window_size = int(input("Enter window_size: ")) # input time period, integer
+episode_count = int(input("Enter Episode_count: ")) # input number of episodes to train
 
-        # Plot the amount of cases reduced over episodes as a line plot
+stock_name = str(stock_name)
+window_size = int(window_size)
+episode_count = int(episode_count)
+agent = DQNAgent(window_size)
+data = getStockDataVec(stock_name)
+l = len(data) - 1
+batch_size = 32
+
+episode_rewards = []
+
+for e in range(episode_count + 1):
+    total_reward = 0
+    print("Episode " + str(e) + "/" + str(episode_count))
+    state = getState(data, 0, window_size + 1)
+    total_profit = 0
+    agent.inventory = []
+    for t in range(l):
+        action = agent.act(state)
+        # sit
+        next_state = getState(data, t + 1, window_size + 1)
+        reward = 0
+        if action == 1: # buy
+            agent.inventory.append(data[t])
+            print("Buy: " + formatPrice(data[t]))
+        elif action == 2 and len(agent.inventory) > 0: # sell
+            bought_price = window_size_price = agent.inventory.pop(0)
+            reward = max(data[t] - bought_price, 0)
+            total_profit += data[t] - bought_price
+            print("Sell: " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
+        done = True if t == l - 1 else False
+        agent.memory.append((state, action, reward, next_state, done))
+        state = next_state
+        if done:
+            print("--------------------------------")
+            print("Total Profit: " + formatPrice(total_profit))
+            print("--------------------------------")
+        if len(agent.memory) > batch_size:
+            agent.expReplay(batch_size)
+        total_reward += reward
+        episode_rewards.append(total_reward)
+        print(episode_rewards)
+
+        # Plot rewards per episode after each episode
         plt.figure(figsize=(8, 6))
-        plt.plot(cumulative_reduction)
+        plt.plot(episode_rewards)
         plt.xlabel('Episodes')
-        plt.ylabel('Cumulative Cases Reduced')
-        plt.title('Amount of Cases Reduced over Episodes')
-        plt.savefig('recovered.png')
-        
-        # Plot the total cases at the end of each episode as a line plot
-        plt.figure(figsize=(8, 6))
-        plt.plot(total_cases_end_of_episode)
-        plt.xlabel('Episodes')
-        plt.ylabel('Total Cases')
-        plt.title('Total Cases over Episodes')
-        plt.savefig('total.png')
-
-    
-# Main code execution
-file_name = input("Enter file_name, window_size, Episode_count")
-window_size = input()
-episode_count = input()
-trainAndPredictCases(file_name, window_size, episode_count)
+        plt.ylabel('Rewards')
+        plt.title('Rewards per Episode')
+        plt.savefig('dqnrep.png')
